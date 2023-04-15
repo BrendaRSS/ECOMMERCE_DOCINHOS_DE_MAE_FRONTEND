@@ -28,7 +28,7 @@ export default function ContainerAboutCakes(){
                         <CgChevronRight />
                         <span>
                             A decoração simples não tem acrescimo no valor. Cada decoração especial
-                            possui um carescimo no valor final. 
+                            possui um carescimo no valor final e os topos de bolo são cobrados a parte.
                         </span>
                     </TextDeatil>
                     <TextDeatil>

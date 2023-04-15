@@ -1,140 +1,136 @@
 import styled from "styled-components";
-import { SiCakephp } from "react-icons/si";
-import { TbCake } from "react-icons/tb";
-import { RiCake2Fill } from "react-icons/ri";
-import { MdCake } from "react-icons/md";
 import { HiCake } from "react-icons/hi2";
 import { GiCakeSlice } from "react-icons/gi";
+import { useState } from "react";
+import { useEffect } from "react";
+import axios from "axios";
 
 export default function ContainerDetailsMenu() {
+    const [categories, setCategories] = useState(false);
+    const [fillingsCake, setFillingsCake] = useState(false);
+    const [cakeDough, setCakeDough] = useState(false);
+    const [categoryDecorations, setCategoryDEcorations] = useState(false);
+    const [decorations, setDecorations] = useState(false);
+
+    useEffect(() => {
+        axios.get(`http://localhost:5000/product/category`)
+            .then((res) => {
+                setCategories(res.data);
+                findInformations();
+            })
+            .catch((error) => {
+                console.log(error.response.data)
+            })
+    }, []);
+
+    function findInformations() {
+        axios.get(`http://localhost:5000/product/fillings`)
+            .then((res) => {
+                setFillingsCake(res.data);
+            })
+            .catch((error) => {
+                console.log(error.response.data)
+            });
+
+        axios.get(`http://localhost:5000/product/dough`)
+            .then((res) => {
+                setCakeDough(res.data);
+            })
+            .catch((error) => {
+                console.log(error.response.data)
+            });
+
+        axios.get(`http://localhost:5000/product/category-decorations`)
+            .then((res) => {
+                setCategoryDEcorations(res.data);
+            })
+            .catch((error) => {
+                console.log(error.response.data)
+            });
+
+        axios.get(`http://localhost:5000/product/decorations`)
+            .then((res) => {
+                setDecorations(res.data);
+            })
+            .catch((error) => {
+                console.log(error.response.data)
+            });
+    }
+
     return (
         <ContainerDetails>
             <ContainerInternalDetailsMenu >
-                {/* TAMANNHOS E RECHEIOS */}
                 <CakesDetails>Preço por Kg</CakesDetails>
                 <Line />
                 <InformationsCakes>
-                    <ColumTraditionalAndSpecial>
-
-                        <TypeTitle>Sabores Tradicionais: R$75,00 Kg</TypeTitle>
-
-                        <ContainerCakesFilling>
-                            <TypesCakeFilling>
-                                <GiCakeSlice />
-                                <span>Chocolate</span>
-                            </TypesCakeFilling>
-                            <TypesCakeFilling>
-                                <GiCakeSlice />
-                                <span>Ninho</span>
-                            </TypesCakeFilling>
-                            <TypesCakeFilling>
-                                <GiCakeSlice />
-                                <span>Beijinho</span>
-                            </TypesCakeFilling>
-                        </ContainerCakesFilling>
-                    </ColumTraditionalAndSpecial>
-
-                    <ColumTraditionalAndSpecial>
-                        <TypeTitle>Sabores Especiais: R$80,00 Kg</TypeTitle>
-
-                        <ContainerCakesFilling>
-                            <TypesCakeFilling>
-                                <GiCakeSlice />
-                                <span>Maracujá</span>
-                            </TypesCakeFilling>
-                            <TypesCakeFilling>
-                                <GiCakeSlice />
-                                <span>Ninho com Óreo</span>
-                            </TypesCakeFilling>
-                            <TypesCakeFilling>
-                                <GiCakeSlice />
-                                <span>Doce de leite</span>
-                            </TypesCakeFilling>
-                        </ContainerCakesFilling>
-                    </ColumTraditionalAndSpecial>
-
-                    <ColumTraditionalAndSpecial>
-                        <TypeTitle>Sabores Gourmet: R$85,00 Kg</TypeTitle>
-
-                        <ContainerCakesFilling>
-                            <TypesCakeFilling>
-                                <GiCakeSlice />
-                                <span>Ninho com morango</span>
-                            </TypesCakeFilling>
-                            <TypesCakeFilling>
-                                <GiCakeSlice />
-                                <span>Ninho com Nutela</span>
-                            </TypesCakeFilling>
-                            <TypesCakeFilling>
-                                <GiCakeSlice />
-                                <span>Chocolate com morango</span>
-                            </TypesCakeFilling>
-                        </ContainerCakesFilling>
-                    </ColumTraditionalAndSpecial>
+                    {categories === false ?
+                        "CARREGANDO..."
+                        :
+                        categories.map((c) =>
+                            <ColumTraditionalAndSpecial>
+                                <TypeTitle>Sabores {c.name}: R${c.price} Kg</TypeTitle>
+                                <ContainerCakesFilling>
+                                    {fillingsCake === false ?
+                                        "CARREGANDO..."
+                                        :
+                                        fillingsCake.map((f) => {
+                                            if (f.category === c.name) {
+                                                return <>
+                                                    <TypesCakeFilling>
+                                                        <GiCakeSlice />
+                                                        <span>{f.type}</span>
+                                                    </TypesCakeFilling>
+                                                </>
+                                            }
+                                        })}
+                                </ContainerCakesFilling>
+                            </ColumTraditionalAndSpecial>
+                        )
+                    }
                 </InformationsCakes>
 
-                {/* MASSAS */}
                 <CakesDetails>Tipos de Massas</CakesDetails>
                 <Line />
                 <InformationsCakes>
-                    <ColumTraditionalAndSpecial>
-                        <TypeTitle>Chocolate</TypeTitle>
-                    </ColumTraditionalAndSpecial>
-
-                    <ColumTraditionalAndSpecial>
-                        <TypeTitle>Branca</TypeTitle>
-                    </ColumTraditionalAndSpecial>
-
-                    <ColumTraditionalAndSpecial>
-                        <TypeTitle>Mista</TypeTitle>
-                    </ColumTraditionalAndSpecial>
+                    {cakeDough === false ?
+                        "CARREGANDO..."
+                        :
+                        cakeDough.map((d) =>
+                            <ColumTraditionalAndSpecial>
+                                <TypeTitle>{d.type}</TypeTitle>
+                            </ColumTraditionalAndSpecial>
+                        )
+                    }
                 </InformationsCakes>
 
-                {/* DECORAÇÕES */}
                 <CakesDetails>Tipos de Decoração</CakesDetails>
                 <Line />
                 <InformationsCakes>
-                    <ColumTraditionalAndSpecial>
-                        <TypeTitle>Simples</TypeTitle>
+                    {categoryDecorations === false ?
+                        "CARREGANDO..."
+                        :
+                        categoryDecorations.map((c) =>
+                            <ColumTraditionalAndSpecial>
+                                <TypeTitle>{c.name}</TypeTitle>
 
-                        <ContainerCakesFilling>
-                            <TypesCakeFilling>
-                                <HiCake />
-                                <span>Chantili</span>
-                            </TypesCakeFilling>
-                            <TypesCakeFilling>
-                                <HiCake />
-                                <span>Acetato</span>
-                            </TypesCakeFilling>
-                        </ContainerCakesFilling>
-                    </ColumTraditionalAndSpecial>
-
-                    <ColumTraditionalAndSpecial>
-                        <TypeTitle>Especiais</TypeTitle>
-
-                        <ContainerCakesFilling>
-                            <TypesCakeFilling>
-                                <HiCake />
-                                <span>Ganache</span>
-                            </TypesCakeFilling>
-                            <TypesCakeFilling>
-                                <HiCake />
-                                <span>Pó ou glitter</span>
-                            </TypesCakeFilling>
-                            <TypesCakeFilling>
-                                <HiCake />
-                                <span>Brigadeiros</span>
-                            </TypesCakeFilling>
-                            <TypesCakeFilling>
-                                <HiCake />
-                                <span>Flores</span>
-                            </TypesCakeFilling>
-                            <TypesCakeFilling>
-                                <HiCake />
-                                <span>Morangos</span>
-                            </TypesCakeFilling>
-                        </ContainerCakesFilling>
-                    </ColumTraditionalAndSpecial>
+                                <ContainerCakesFilling>
+                                    {decorations === false ?
+                                        "CARREANDO..."
+                                        :
+                                        decorations.map((d) => {
+                                            if (d.category === c.name) {
+                                                return <>
+                                                    <TypesCakeFilling>
+                                                        <HiCake />
+                                                        <span>{d.name}</span>
+                                                    </TypesCakeFilling>
+                                                </>
+                                            }
+                                        })
+                                    }
+                                </ContainerCakesFilling>
+                            </ColumTraditionalAndSpecial>
+                        )}
                 </InformationsCakes>
             </ContainerInternalDetailsMenu>
         </ContainerDetails>
