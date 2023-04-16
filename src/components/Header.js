@@ -14,7 +14,9 @@ export default function Header() {
                 <Link to={"/cardapio"}>
                     <ButtonsOptionsBar>Cardápio</ButtonsOptionsBar>
                 </Link>
-                <ButtonsOptionsBar>Encomenda</ButtonsOptionsBar>
+                <Link to={"/pedido"}>
+                    <ButtonsOptionsBar>Encomenda</ButtonsOptionsBar>
+                </Link>
                 <ButtonsOptionsBar>Promoções</ButtonsOptionsBar>
                 <ButtonsOptionsBar>Endereço</ButtonsOptionsBar>
             </OptionsBar>
